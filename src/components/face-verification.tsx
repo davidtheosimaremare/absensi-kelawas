@@ -55,6 +55,8 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
         }
+        // Tunggu 1 detik agar kamera stabil & terang, lalu otomatis mulai scan
+        setTimeout(() => setStatus("scanning"), 1000);
     } catch (err) {
         alert("Camera access required for face verification");
         onCancel();
@@ -62,16 +64,9 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
   };
 
   useEffect(() => {
-    // Jalankan kamera langsung saat komponen modal ini muncul
     startCamera();
-    
-    // Jangan lupa matikan kamera kalau modal ini ditutup secara mendadak
     return () => stopCamera();
   }, []);
-
-  const handleStartScan = () => {
-    setStatus("scanning");
-  };
 
   const handleCancel = () => {
       stopCamera();
@@ -114,20 +109,17 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
 
            {status === "ready" && (
               <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-end pb-8 bg-gradient-to-t from-black/80 to-transparent">
-                 <span className="text-white text-xs font-bold animate-pulse">Menunggu...</span>
+                 <span className="text-white text-xs font-bold animate-pulse">Menyiapkan Kamera...</span>
               </div>
            )}
         </div>
 
         <div className="w-full space-y-4">
             {status === "ready" ? (
-                <button 
-                    onClick={handleStartScan}
-                    className="w-full py-4 bg-accent text-accent-foreground rounded-2xl font-bold hover:bg-accent/90 transition-all flex items-center justify-center gap-2"
-                >
-                    <Camera className="w-5 h-5" />
-                    Start Verification
-                </button>
+                <div className="w-full py-4 text-center rounded-2xl font-bold flex items-center justify-center gap-2 text-accent animate-pulse">
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    Mengaktifkan Lensa...
+                </div>
             ) : status === "scanning" ? (
                 <div className="text-center text-sm font-bold text-accent animate-pulse">
                     Please blink or nod slightly...
