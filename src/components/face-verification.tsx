@@ -77,15 +77,13 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
         </div>
 
         <div className="relative w-64 h-64 md:w-80 md:h-80 rounded-full overflow-hidden border-4 border-accent shadow-2xl bg-black">
-           {status !== "ready" && (
-             <video 
-                ref={videoRef} 
-                autoPlay 
-                playsInline 
-                muted 
-                className="absolute inset-0 w-full h-full object-cover scale-x-[-1]"
-             />
-           )}
+           <video 
+              ref={videoRef} 
+              autoPlay 
+              playsInline 
+              muted 
+              className={`absolute inset-0 w-full h-full object-cover scale-x-[-1] transition-opacity duration-300 ${status !== 'ready' ? 'opacity-100' : 'opacity-0'}`}
+           />
            
            {/* Scan Overlay */}
            {status === "scanning" && (
