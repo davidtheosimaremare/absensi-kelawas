@@ -58,14 +58,14 @@ export default function EmployeeDashboard() {
     setShowVerification(true);
   };
 
-  const handleVerified = () => {
+  const handleVerified = (photoData: string) => {
     if (pendingType) {
-        handleSubmit(pendingType);
+        handleSubmit(pendingType, photoData);
     }
     setShowVerification(false);
   };
 
-  const handleSubmit = async (type: "check_in" | "check_out") => {
+  const handleSubmit = async (type: "check_in" | "check_out", photoData?: string) => {
     if (!location) return;
     setSubmitting(true);
     
@@ -75,6 +75,7 @@ export default function EmployeeDashboard() {
         latitude: location.lat,
         longitude: location.lng,
         type,
+        photoData,
       }),
     });
 

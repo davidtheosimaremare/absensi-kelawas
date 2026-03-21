@@ -20,6 +20,8 @@ interface AttendanceRecord {
   id: string;
   checkIn: string | null;
   checkOut: string | null;
+  checkInPhotoUrl: string | null;
+  checkOutPhotoUrl: string | null;
   status: "PRESENT" | "ABSENT" | "LATE";
   user: { name: string; email: string };
 }
@@ -112,6 +114,7 @@ export default function AdminReports() {
               <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Date</th>
               <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Check In</th>
               <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Check Out</th>
+              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Proof</th>
               <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Status</th>
             </tr>
           </thead>
@@ -149,6 +152,21 @@ export default function AdminReports() {
                       <Clock className="w-3.5 h-3.5 text-gray-400" />
                       {record.checkOut ? format(new Date(record.checkOut), "hh:mm a") : "--:--"}
                    </div>
+                </td>
+                <td className="px-6 py-4">
+                  <div className="flex gap-2">
+                    {record.checkInPhotoUrl && (
+                      <a href={record.checkInPhotoUrl} target="_blank" rel="noreferrer" title="Check In Photo">
+                        <img src={record.checkInPhotoUrl} alt="in" className="w-8 h-8 rounded-md object-cover border border-border hover:scale-[3] transition-transform origin-center shadow-lg" />
+                      </a>
+                    )}
+                    {record.checkOutPhotoUrl && (
+                      <a href={record.checkOutPhotoUrl} target="_blank" rel="noreferrer" title="Check Out Photo">
+                        <img src={record.checkOutPhotoUrl} alt="out" className="w-8 h-8 rounded-md object-cover border border-border hover:scale-[3] transition-transform origin-center shadow-lg" />
+                      </a>
+                    )}
+                    {!record.checkInPhotoUrl && !record.checkOutPhotoUrl && <span className="text-gray-400 text-xs italic">No Photo</span>}
+                  </div>
                 </td>
                 <td className="px-6 py-4">
                    <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider leading-none ${

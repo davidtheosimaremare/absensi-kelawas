@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { latitude, longitude, type } = await req.json(); // type: 'check_in' | 'check_out'
+    const { latitude, longitude, type, photoData } = await req.json(); // type: 'check_in' | 'check_out'
 
     if (!latitude || !longitude || !type) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -68,6 +68,7 @@ export async function POST(req: Request) {
           latitude,
           longitude,
           status: "PRESENT",
+          checkInPhotoUrl: photoData,
         },
       });
     } else if (type === "check_out") {
@@ -82,6 +83,7 @@ export async function POST(req: Request) {
         where: { id: attendance.id },
         data: {
           checkOut: today,
+          checkOutPhotoUrl: photoData,
         },
       });
     }

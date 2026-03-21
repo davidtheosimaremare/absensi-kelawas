@@ -44,14 +44,16 @@ model Schedule {
 }
 
 model Attendance {
-  id         String           @id @default(uuid())
-  userId     String           @map("user_id")
-  user       User             @relation(fields: [userId], references: [id])
-  checkIn    DateTime?        @map("check_in")
-  checkOut   DateTime?        @map("check_out")
-  latitude   Float?
-  longitude  Float?
-  status     AttendanceStatus @default(PRESENT)
+  id               String           @id @default(uuid())
+  userId           String           @map("user_id")
+  user             User             @relation(fields: [userId], references: [id])
+  checkIn          DateTime?        @map("check_in")
+  checkOut         DateTime?        @map("check_out")
+  checkInPhotoUrl  String?          @map("check_in_photo_url")
+  checkOutPhotoUrl String?          @map("check_out_photo_url")
+  latitude         Float?
+  longitude        Float?
+  status           AttendanceStatus @default(PRESENT)
 
   @@map("attendances")
 }

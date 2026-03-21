@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from "react";
 import { Camera, ShieldCheck, Loader2, CheckCircle2 } from "lucide-react";
 
 interface FaceVerificationProps {
-  onVerify: () => void;
+  onVerify: (photoData: string) => void;
   onCancel: () => void;
 }
 
@@ -12,11 +12,38 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
   const [status, setStatus] = useState<"ready" | "scanning" | "success">("ready");
   const videoRef = useRef<HTMLVideoElement>(null);
 
+  const capturePhoto = (): string | null => {
+    if (videoRef.current) {
+        const canvas = document.createElement("canvas");
+        canvas.width = videoRef.current.videoWidth;
+        canvas.height = videoRef.current.videoHeight;
+        const ctx = canvas.getContext("2d");
+        if (ctx) {
+            ctx.translate(canvas.width, 0);
+            ctx.scale(-1, 1);
+            ctx.drawImage(videoRef.current, 0, 0, canvas.width, canvas.height);
+            return canvas.toDataURL("image/jpeg", 0.6); // 60% quality jpeg
+        }
+    }
+    return null;
+  };
+
+  const stopCamera = () => {
+      if (videoRef.current?.srcObject) {
+          const stream = videoRef.current.srcObject as MediaStream;
+          stream.getTracks().forEach(track => track.stop());
+      }
+  };
+
   useEffect(() => {
     if (status === "scanning") {
         const timer = setTimeout(() => {
+            const photo = capturePhoto();
             setStatus("success");
-            setTimeout(onVerify, 1500);
+            setTimeout(() => {
+                stopCamera();
+                onVerify(photo || "");
+            }, 1500);
         }, 3000);
         return () => clearTimeout(timer);
     }
@@ -31,8 +58,14 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
         setStatus("scanning");
     } catch (err) {
         alert("Camera access required for face verification");
+        stopCamera();
         onCancel();
     }
+  };
+
+  const handleCancel = () => {
+      stopCamera();
+      onCancel();
   };
 
   return (
@@ -98,7 +131,7 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
             )}
             
             <button 
-                onClick={onCancel}
+                onClick={handleCancel}
                 className="w-full py-2 text-sm text-gray-500 font-medium hover:text-red-500 transition-colors"
             >
                 Cancel Process
