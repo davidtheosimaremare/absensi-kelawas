@@ -49,18 +49,28 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
     }
   }, [status]);
 
-  const startScan = async () => {
+  const startCamera = async () => {
     try {
         const stream = await navigator.mediaDevices.getUserMedia({ video: true });
         if (videoRef.current) {
             videoRef.current.srcObject = stream;
         }
-        setStatus("scanning");
     } catch (err) {
         alert("Camera access required for face verification");
-        stopCamera();
         onCancel();
     }
+  };
+
+  useEffect(() => {
+    // Jalankan kamera langsung saat komponen modal ini muncul
+    startCamera();
+    
+    // Jangan lupa matikan kamera kalau modal ini ditutup secara mendadak
+    return () => stopCamera();
+  }, []);
+
+  const handleStartScan = () => {
+    setStatus("scanning");
   };
 
   const handleCancel = () => {
@@ -82,7 +92,7 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
               autoPlay 
               playsInline 
               muted 
-              className={`absolute inset-0 w-full h-full object-cover scale-x-[-1] transition-opacity duration-300 ${status !== 'ready' ? 'opacity-100' : 'opacity-0'}`}
+              className={`absolute inset-0 w-full h-full object-cover scale-x-[-1] transition-opacity duration-300 ${status === 'success' ? 'opacity-0' : 'opacity-100'}`}
            />
            
            {/* Scan Overlay */}
@@ -103,8 +113,8 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
            )}
 
            {status === "ready" && (
-              <div className="absolute inset-0 flex items-center justify-center bg-accent/5">
-                 <Camera className="w-16 h-16 text-accent/20" />
+              <div className="absolute inset-0 pointer-events-none flex flex-col items-center justify-end pb-8 bg-gradient-to-t from-black/80 to-transparent">
+                 <span className="text-white text-xs font-bold animate-pulse">Menunggu...</span>
               </div>
            )}
         </div>
@@ -112,7 +122,7 @@ export default function FaceVerification({ onVerify, onCancel }: FaceVerificatio
         <div className="w-full space-y-4">
             {status === "ready" ? (
                 <button 
-                    onClick={startScan}
+                    onClick={handleStartScan}
                     className="w-full py-4 bg-accent text-accent-foreground rounded-2xl font-bold hover:bg-accent/90 transition-all flex items-center justify-center gap-2"
                 >
                     <Camera className="w-5 h-5" />
