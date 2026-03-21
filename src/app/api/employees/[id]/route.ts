@@ -41,6 +41,12 @@ export async function DELETE(
 
   try {
     const { id } = await params;
+    
+    // Hapus data absensi terkait terlebih dahulu agar tidak terjadi Foreign Key Constraint Error
+    await prisma.attendance.deleteMany({
+      where: { userId: id },
+    });
+
     await prisma.user.delete({
       where: { id },
     });
