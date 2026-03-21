@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  ADMIN
+  EMPLOYEE
+}
+
+enum ScheduleStatus {
+  WORK_DAY
+  HOLIDAY
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  LATE
+}
+
+model User {
+  id         String       @id @default(uuid())
+  name       String
+  email      String       @unique
+  password   String
+  ktp        String?
+  faceData   String?      @map("face_data")
+  role       Role         @default(EMPLOYEE)
+  attendances Attendance[]
+
+  @@map("users")
+}
+
+model Schedule {
+  id     Int            @id @default(autoincrement())
+  date   DateTime       @unique @db.Date
+  status ScheduleStatus @default(WORK_DAY)
+
+  @@map("schedules")
+}
+
+model Attendance {
+  id         String           @id @default(uuid())
+  userId     String           @map("user_id")
+  user       User             @relation(fields: [userId], references: [id])
+  checkIn    DateTime?        @map("check_in")
+  checkOut   DateTime?        @map("check_out")
+  latitude   Float?
+  longitude  Float?
+  status     AttendanceStatus @default(PRESENT)
+
+  @@map("attendances")
+}
