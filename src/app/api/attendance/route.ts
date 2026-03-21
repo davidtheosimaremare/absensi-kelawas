@@ -71,13 +71,6 @@ export async function POST(req: Request) {
           checkInPhotoUrl: photoData,
         },
       });
-
-      if (faceDescriptor) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: { faceData: faceDescriptor },
-        });
-      }
     } else if (type === "check_out") {
       if (!attendance) {
         return NextResponse.json({ error: "No check-in found for today" }, { status: 400 });
@@ -92,6 +85,14 @@ export async function POST(req: Request) {
           checkOut: today,
           checkOutPhotoUrl: photoData,
         },
+      });
+    }
+
+    // Save initial face biometric data whether they registered it during check-in or check-out
+    if (faceDescriptor) {
+      await prisma.user.update({
+        where: { id: userId },
+        data: { faceData: faceDescriptor },
       });
     }
 
