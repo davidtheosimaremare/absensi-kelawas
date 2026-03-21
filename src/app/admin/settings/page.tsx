@@ -14,15 +14,24 @@ export default function AdminSettings() {
   const [schedules, setSchedules] = useState<Schedule[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [coordinates, setCoordinates] = useState({ lat: "-", lng: "-" });
 
   useEffect(() => {
     fetchSchedules();
   }, []);
 
   const fetchSchedules = async () => {
-    const res = await fetch(`/api/schedules?month=${currentMonth.getMonth() + 1}&year=${currentMonth.getFullYear()}`);
-    const data = await res.json();
-    setSchedules(data);
+    const [scheduleRes, settingsRes] = await Promise.all([
+        fetch(`/api/schedules?month=${currentMonth.getMonth() + 1}&year=${currentMonth.getFullYear()}`),
+        fetch('/api/settings')
+    ]);
+    const scheduleData = await scheduleRes.json();
+    const settingsData = await settingsRes.json();
+
+    setSchedules(scheduleData);
+    if (settingsData.latitude && settingsData.longitude) {
+        setCoordinates({ lat: settingsData.latitude, lng: settingsData.longitude });
+    }
     setLoading(false);
   };
 
@@ -109,8 +118,8 @@ export default function AdminSettings() {
               </div>
               <div className="p-4 bg-background/50 border border-border rounded-2xl opacity-50">
                 <p className="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Coordinates</p>
-                <p className="text-xs font-mono truncate">Lat: {process.env.NEXT_PUBLIC_TARGET_LATITUDE || "- (-)"}</p>
-                <p className="text-xs font-mono truncate">Long: {process.env.NEXT_PUBLIC_TARGET_LONGITUDE || "- (-)"}</p>
+                <p className="text-xs font-mono truncate">Lat: {coordinates.lat}</p>
+                <p className="text-xs font-mono truncate">Long: {coordinates.lng}</p>
               </div>
             </div>
             <p className="mt-6 text-[10px] text-gray-400 italic">
