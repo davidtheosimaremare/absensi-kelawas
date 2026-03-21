@@ -145,7 +145,7 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
     <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/95 backdrop-blur-md animate-in fade-in duration-300">
       <div className="w-full max-w-md space-y-8 flex flex-col items-center">
         <div className="text-center">
-            <h3 className="text-3xl font-black mb-2">Face Verification</h3>
+            <h3 className="text-3xl font-black mb-2">Verifikasi Wajah</h3>
             <p className="text-gray-500 font-medium">
                {faceData ? "Memverifikasi Identitas Anda..." : "Pendaftaran Wajah Pertama Kali"}
             </p>
@@ -163,7 +163,7 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
            {status === "loading_models" && (
              <div className="absolute inset-0 flex flex-col items-center justify-center bg-accent/5">
                 <Loader2 className="w-10 h-10 animate-spin text-accent mb-4" />
-                <span className="text-sm font-bold animate-pulse text-accent">Loading AI Models...</span>
+                <span className="text-sm font-bold animate-pulse text-accent">Memuat AI...</span>
              </div>
            )}
 
@@ -172,7 +172,7 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
                 <div className="w-full h-1 bg-accent/50 absolute top-0 animate-[scan_2s_ease-in-out_infinite]" />
                 <div className="z-10 bg-black/20 backdrop-blur-sm px-4 py-2 rounded-full flex items-center gap-2">
                     <Loader2 className="w-4 h-4 animate-spin text-accent" />
-                    <span className="text-[10px] font-bold uppercase tracking-widest text-white">Analyzing Liveness</span>
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-white">Memindai Wajah</span>
                 </div>
              </div>
            )}
@@ -224,7 +224,7 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
                 </div>
             ) : (
                 <div className="text-center text-sm font-bold text-green-500">
-                    Identity Verified Successfully
+                    Identitas Berhasil Diverifikasi
                 </div>
             )}
             
@@ -238,7 +238,7 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
 
         <div className="flex items-center gap-2 text-[10px] text-gray-400 font-bold uppercase tracking-widest bg-card px-4 py-2 rounded-full border border-border">
             <ShieldCheck className="w-3.5 h-3.5" />
-            Biometric Encryption Active
+            Enkripsi Biometrik Aktif
         </div>
       </div>
       
