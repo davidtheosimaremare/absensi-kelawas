@@ -12,14 +12,24 @@ export default function EmployeeDashboard() {
   const [locLoading, setLocLoading] = useState(true);
   const [locError, setLocError] = useState("");
   const [attendance, setAttendance] = useState<any>(null);
+  const [faceData, setFaceData] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
   const [showVerification, setShowVerification] = useState(false);
   const [pendingType, setPendingType] = useState<"check_in" | "check_out" | null>(null);
 
   useEffect(() => {
     fetchTodayAttendance();
+    fetchFaceData();
     requestLocation();
   }, []);
+
+  const fetchFaceData = async () => {
+    const res = await fetch("/api/user/me");
+    if (res.ok) {
+        const data = await res.json();
+        setFaceData(data.faceData);
+    }
+  };
 
   const fetchTodayAttendance = async () => {
     const res = await fetch("/api/attendance/me");
@@ -58,14 +68,14 @@ export default function EmployeeDashboard() {
     setShowVerification(true);
   };
 
-  const handleVerified = (photoData: string) => {
+  const handleVerified = (photoData: string, faceDescriptor?: string) => {
     if (pendingType) {
-        handleSubmit(pendingType, photoData);
+        handleSubmit(pendingType, photoData, faceDescriptor);
     }
     setShowVerification(false);
   };
 
-  const handleSubmit = async (type: "check_in" | "check_out", photoData?: string) => {
+  const handleSubmit = async (type: "check_in" | "check_out", photoData?: string, faceDescriptor?: string) => {
     if (!location) return;
     setSubmitting(true);
     
@@ -76,6 +86,7 @@ export default function EmployeeDashboard() {
         longitude: location.lng,
         type,
         photoData,
+        faceDescriptor,
       }),
     });
 
@@ -210,6 +221,7 @@ export default function EmployeeDashboard() {
 
       {showVerification && (
         <FaceVerification 
+            faceData={faceData}
             onVerify={handleVerified} 
             onCancel={() => setShowVerification(false)} 
         />

@@ -13,7 +13,7 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { latitude, longitude, type, photoData } = await req.json(); // type: 'check_in' | 'check_out'
+    const { latitude, longitude, type, photoData, faceDescriptor } = await req.json(); // type: 'check_in' | 'check_out'
 
     if (!latitude || !longitude || !type) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
@@ -71,6 +71,13 @@ export async function POST(req: Request) {
           checkInPhotoUrl: photoData,
         },
       });
+
+      if (faceDescriptor) {
+        await prisma.user.update({
+          where: { id: userId },
+          data: { faceData: faceDescriptor },
+        });
+      }
     } else if (type === "check_out") {
       if (!attendance) {
         return NextResponse.json({ error: "No check-in found for today" }, { status: 400 });
