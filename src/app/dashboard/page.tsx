@@ -4,7 +4,9 @@ import { useState, useEffect } from "react";
 import { useSession } from "next-auth/react";
 import { MapPin, ShieldCheck, Clock, CheckCircle2, XCircle, Loader2, Camera, LogOut } from "lucide-react";
 import { format } from "date-fns";
-import FaceVerification from "@/components/face-verification";
+import dynamic from 'next/dynamic';
+
+const FaceVerification = dynamic(() => import('@/components/face-verification'), { ssr: false });
 
 export default function EmployeeDashboard() {
   const { data: session } = useSession();
