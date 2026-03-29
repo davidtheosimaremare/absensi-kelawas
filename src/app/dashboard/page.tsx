@@ -55,7 +55,7 @@ export default function EmployeeDashboard() {
         setLocLoading(false);
       },
       (err) => {
-        setLocError("Location access denied. Please enable it to check in.");
+        setLocError("Akses lokasi ditolak. Harap izinkan untuk absen.");
         alert("Akses lokasi ditolak! Anda wajib mengizinkan akses lokasi pada browser untuk dapat melakukan absensi.");
         setLocLoading(false);
       },
@@ -94,7 +94,7 @@ export default function EmployeeDashboard() {
         fetchTodayAttendance();
     } else {
         const error = await res.json();
-        alert(error.error || "Failed to submit");
+        alert(error.error || "Gagal mengirim");
     }
     setSubmitting(false);
   };
@@ -110,12 +110,12 @@ export default function EmployeeDashboard() {
               </div>
               <div>
                 <h1 className="text-xl font-bold">Smart-Check</h1>
-                <p className="text-xs text-gray-500 font-medium">Employee Portal</p>
+                <p className="text-xs text-gray-500 font-medium">Portal Karyawan</p>
               </div>
             </div>
             <div className="text-right">
               <p className="text-sm font-bold">{session?.user?.name}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Present & Secure</p>
+              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Hadir & Aman</p>
             </div>
         </div>
 
@@ -130,23 +130,23 @@ export default function EmployeeDashboard() {
             <div className="mt-8 flex gap-4">
                {attendance?.checkIn ? (
                  <div className="flex-1 p-4 bg-green-500/5 border border-green-500/20 rounded-2xl">
-                    <p className="text-[10px] font-bold text-green-500 uppercase mb-1">Checked In</p>
+                    <p className="text-[10px] font-bold text-green-500 uppercase mb-1">Masuk</p>
                     <p className="text-lg font-bold">{format(new Date(attendance.checkIn), "hh:mm a")}</p>
                  </div>
                ) : (
                  <div className="flex-1 p-4 bg-gray-500/5 border border-gray-500/10 rounded-2xl italic text-gray-400 text-sm flex items-center justify-center">
-                    Pending In
+                    Belum Masuk
                  </div>
                )}
 
                {attendance?.checkOut ? (
                  <div className="flex-1 p-4 bg-blue-500/5 border border-blue-500/20 rounded-2xl">
-                    <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">Checked Out</p>
+                    <p className="text-[10px] font-bold text-blue-500 uppercase mb-1">Keluar</p>
                     <p className="text-lg font-bold">{format(new Date(attendance.checkOut), "hh:mm a")}</p>
                  </div>
                ) : (
                  <div className="flex-1 p-4 bg-gray-500/5 border border-gray-500/10 rounded-2xl italic text-gray-400 text-sm flex items-center justify-center">
-                    Pending Out
+                    Belum Keluar
                  </div>
                )}
             </div>
@@ -192,7 +192,7 @@ export default function EmployeeDashboard() {
                 >
                   <Camera className="w-8 h-8" />
                   Jam Masuk
-                  <span className="text-[10px] font-medium opacity-70">Requires Face Verification</span>
+                  <span className="text-[10px] font-medium opacity-70">Membutuhkan Verifikasi Wajah</span>
                 </button>
               ) : !attendance?.checkOut ? (
                 <button
@@ -202,7 +202,7 @@ export default function EmployeeDashboard() {
                 >
                   <LogOut className="w-8 h-8" />
                   Jam Pulang
-                  <span className="text-[10px] font-medium opacity-70">End your session</span>
+                  <span className="text-[10px] font-medium opacity-70">Akhiri sesi Anda</span>
                 </button>
               ) : (
                 <div className="w-full py-8 glass border-green-500/20 rounded-3xl flex flex-col items-center gap-4 text-center">
@@ -210,8 +210,8 @@ export default function EmployeeDashboard() {
                       <CheckCircle2 className="w-10 h-10 text-green-500" />
                    </div>
                    <div>
-                     <p className="font-black text-xl">Attendance Complete</p>
-                     <p className="text-sm text-gray-500">You're all set for today. Great work!</p>
+                     <p className="font-black text-xl">Absensi Selesai</p>
+                     <p className="text-sm text-gray-500">Anda sudah selesai untuk hari ini. Kerja bagus!</p>
                    </div>
                 </div>
               )}

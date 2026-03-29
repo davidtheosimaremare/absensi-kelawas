@@ -16,17 +16,17 @@ export default function LoginPage() {
             </div>
             <h1 className="text-3xl font-bold tracking-tight mb-2">Smart-Check</h1>
             <p className="text-gray-500 dark:text-gray-400 text-sm">
-              Securing attendance with precision
+              Mengamankan absensi dengan presisi
             </p>
           </div>
 
           <LoginForm />
 
           <div className="mt-8 pt-6 border-t border-border flex justify-between items-center text-xs text-gray-500">
-            <span>Powered by Vibe Coder</span>
+            <span>Didukung oleh Vibe Coder</span>
             <span className="flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
-              Secure System
+              Sistem Aman
             </span>
           </div>
         </div>

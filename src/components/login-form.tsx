@@ -34,7 +34,7 @@ export default function LoginForm() {
         router.refresh();
       }
     } catch (err) {
-      setError("An unexpected error occurred");
+      setError("Terjadi kesalahan yang tidak terduga");
       setLoading(false);
     }
   };
@@ -52,7 +52,7 @@ export default function LoginForm() {
           <Mail className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-accent transition-colors" />
           <input
             type="email"
-            placeholder="Email Address"
+            placeholder="Alamat Email"
             required
             className="w-full pl-10 pr-4 py-3 bg-input border border-border rounded-xl focus:ring-2 focus:ring-accent outline-hidden transition-all text-sm"
             value={formData.email}
@@ -64,7 +64,7 @@ export default function LoginForm() {
           <Lock className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400 group-focus-within:text-accent transition-colors" />
           <input
             type="password"
-            placeholder="Password"
+            placeholder="Kata Sandi"
             required
             className="w-full pl-10 pr-4 py-3 bg-input border border-border rounded-xl focus:ring-2 focus:ring-accent outline-hidden transition-all text-sm"
             value={formData.password}
@@ -83,7 +83,7 @@ export default function LoginForm() {
         ) : (
           <>
             <LogIn className="w-5 h-5" />
-            <span>Sign In</span>
+            <span>Masuk</span>
           </>
         )}
       </button>

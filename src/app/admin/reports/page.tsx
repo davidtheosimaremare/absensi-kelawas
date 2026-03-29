@@ -63,7 +63,7 @@ export default function AdminReports() {
       setShowOverrideModal(false);
       fetchReports();
     } else {
-        alert("Failed to override");
+        alert("Gagal melakukan entri manual");
     }
   };
 
@@ -71,8 +71,8 @@ export default function AdminReports() {
     <div className="space-y-8">
       <header className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Attendance Reports</h2>
-          <p className="text-gray-500">Analyze performance and manage attendance exceptions.</p>
+          <h2 className="text-3xl font-bold tracking-tight">Laporan Kehadiran</h2>
+          <p className="text-gray-500">Analisis kinerja dan kelola pengecualian kehadiran.</p>
         </div>
         <div className="flex gap-3">
           <button 
@@ -80,11 +80,11 @@ export default function AdminReports() {
             className="flex items-center gap-2 px-4 py-2 border border-accent/20 text-accent rounded-xl text-sm font-bold hover:bg-accent/5 transition-all"
           >
             <Edit3 className="w-4 h-4" />
-            Manual Entry
+            Entri Manual
           </button>
           <button className="flex items-center gap-2 px-4 py-2 bg-accent text-accent-foreground rounded-xl text-sm font-bold hover:bg-accent/90 transition-all shadow-lg shadow-accent/20">
             <Download className="w-4 h-4" />
-            Export CSV
+            Ekspor CSV
           </button>
         </div>
       </header>
@@ -95,13 +95,13 @@ export default function AdminReports() {
            onClick={() => setRange("month")}
            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${range === 'month' ? 'bg-accent text-white shadow-md' : 'text-gray-500 hover:text-accent'}`}
         >
-          Monthly
+          Bulanan
         </button>
         <button 
            onClick={() => setRange("week")}
            className={`px-4 py-2 rounded-xl text-xs font-bold uppercase tracking-wider transition-all ${range === 'week' ? 'bg-accent text-white shadow-md' : 'text-gray-500 hover:text-accent'}`}
         >
-          Weekly
+          Mingguan
         </button>
       </div>
 
@@ -110,11 +110,11 @@ export default function AdminReports() {
         <table className="w-full text-left">
           <thead>
             <tr className="bg-accent/5 border-b border-border">
-              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Employee</th>
-              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Date</th>
-              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Check In</th>
-              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Check Out</th>
-              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Proof</th>
+              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Karyawan</th>
+              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Tanggal</th>
+              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Masuk</th>
+              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Keluar</th>
+              <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Bukti</th>
               <th className="px-6 py-4 text-xs font-bold uppercase tracking-wider text-gray-500 leading-none">Status</th>
             </tr>
           </thead>
@@ -156,16 +156,16 @@ export default function AdminReports() {
                 <td className="px-6 py-4">
                   <div className="flex gap-2">
                     {record.checkInPhotoUrl && (
-                      <a href={record.checkInPhotoUrl} target="_blank" rel="noreferrer" title="Check In Photo">
+                      <a href={record.checkInPhotoUrl} target="_blank" rel="noreferrer" title="Foto Masuk">
                         <img src={record.checkInPhotoUrl} alt="in" className="w-8 h-8 rounded-md object-cover border border-border hover:scale-[3] transition-transform origin-center shadow-lg" />
                       </a>
                     )}
                     {record.checkOutPhotoUrl && (
-                      <a href={record.checkOutPhotoUrl} target="_blank" rel="noreferrer" title="Check Out Photo">
+                      <a href={record.checkOutPhotoUrl} target="_blank" rel="noreferrer" title="Foto Keluar">
                         <img src={record.checkOutPhotoUrl} alt="out" className="w-8 h-8 rounded-md object-cover border border-border hover:scale-[3] transition-transform origin-center shadow-lg" />
                       </a>
                     )}
-                    {!record.checkInPhotoUrl && !record.checkOutPhotoUrl && <span className="text-gray-400 text-xs italic">No Photo</span>}
+                    {!record.checkInPhotoUrl && !record.checkOutPhotoUrl && <span className="text-gray-400 text-xs italic">Tidak Ada Foto</span>}
                   </div>
                 </td>
                 <td className="px-6 py-4">
@@ -177,7 +177,7 @@ export default function AdminReports() {
                       {record.status === 'PRESENT' && <CheckCircle2 className="w-3 h-3" />}
                       {record.status === 'ABSENT' && <XCircle className="w-3 h-3" />}
                       {record.status === 'LATE' && <AlertCircle className="w-3 h-3" />}
-                      {record.status}
+                      {record.status === 'PRESENT' ? 'HADIR' : record.status === 'ABSENT' ? 'ALPA' : 'TERLAMBAT'}
                    </span>
                 </td>
               </tr>
@@ -189,7 +189,7 @@ export default function AdminReports() {
             <div className="w-16 h-16 bg-accent/5 rounded-full flex items-center justify-center mx-auto opacity-20">
                 <BarChart3 className="w-8 h-8" />
             </div>
-            <p className="text-sm text-gray-500 italic">No records found for the selected period.</p>
+            <p className="text-sm text-gray-500 italic">Tidak ada catatan yang ditemukan untuk periode yang dipilih.</p>
           </div>
         )}
       </div>
@@ -198,23 +198,23 @@ export default function AdminReports() {
       {showOverrideModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4 bg-background/80 backdrop-blur-sm animate-in fade-in duration-200">
           <div className="glass w-full max-w-md p-8 rounded-3xl border border-border shadow-2xl animate-in zoom-in-95 duration-200">
-            <h3 className="text-2xl font-bold mb-6">Manual Attendance Entry</h3>
+            <h3 className="text-2xl font-bold mb-6">Entri Kehadiran Manual</h3>
             <form onSubmit={handleOverride} className="space-y-4">
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Select Employee</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Pilih Karyawan</label>
                 <select 
                    required
                    className="w-full px-4 py-3 bg-input border border-border rounded-xl focus:ring-2 focus:ring-accent outline-hidden transition-all text-sm"
                    value={overrideData.userId}
                    onChange={(e) => setOverrideData({ ...overrideData, userId: e.target.value })}
                 >
-                   <option value="">Choose an employee...</option>
+                   <option value="">Pilih karyawan...</option>
                    {employees.map(e => <option key={e.id} value={e.id}>{e.name}</option>)}
                 </select>
               </div>
 
               <div className="space-y-1.5">
-                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Date</label>
+                <label className="text-[10px] font-bold uppercase tracking-widest text-gray-500 ml-1">Tanggal</label>
                 <input 
                   type="date" 
                   required
@@ -232,9 +232,9 @@ export default function AdminReports() {
                    value={overrideData.status}
                    onChange={(e) => setOverrideData({ ...overrideData, status: e.target.value })}
                 >
-                   <option value="PRESENT">PRESENT</option>
-                   <option value="LATE">LATE</option>
-                   <option value="ABSENT">ABSENT</option>
+                   <option value="PRESENT">HADIR</option>
+                   <option value="LATE">TERLAMBAT</option>
+                   <option value="ABSENT">ALPA</option>
                 </select>
               </div>
 
@@ -244,13 +244,13 @@ export default function AdminReports() {
                   onClick={() => setShowOverrideModal(false)}
                   className="flex-1 py-3 text-sm font-semibold text-gray-500 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-xl transition-colors"
                 >
-                  Cancel
+                  Batal
                 </button>
                 <button 
                   type="submit"
                   className="flex-2 py-3 bg-accent text-accent-foreground rounded-xl font-bold hover:bg-accent/90 transition-all shadow-lg shadow-accent/25"
                 >
-                  Save Entry
+                  Simpan Entri
                 </button>
               </div>
             </form>

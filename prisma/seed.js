@@ -17,7 +17,7 @@ async function main() {
     create: {
       email: "admin@smartcheck.com",
       name: "Super Admin",
-      password: adminPassword,
+      password:adminPassword,
       role: "ADMIN",
     },
   });

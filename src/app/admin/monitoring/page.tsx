@@ -65,8 +65,8 @@ export default function CalendarMonitoring() {
     <div className="space-y-8">
       <header className="flex items-center justify-between">
         <div>
-          <h2 className="text-3xl font-bold tracking-tight">Attendance Calendar</h2>
-          <p className="text-gray-500">Track presence and organizational schedules across time.</p>
+          <h2 className="text-3xl font-bold tracking-tight">Kalender Kehadiran</h2>
+          <p className="text-gray-500">Lacak kehadiran dan jadwal organisasi sepanjang waktu.</p>
         </div>
         <div className="flex items-center gap-4 bg-card border border-border px-4 py-2 rounded-2xl glass">
           <button onClick={() => setCurrentMonth(subMonths(currentMonth, 1))} className="p-1 hover:text-accent transition-colors">
@@ -82,7 +82,7 @@ export default function CalendarMonitoring() {
       <div className="glass rounded-3xl border border-border overflow-hidden">
         {/* Calendar Header */}
         <div className="grid grid-cols-7 border-b border-border bg-accent/5">
-          {["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"].map((day) => (
+          {["Sen", "Sel", "Rab", "Kam", "Jum", "Sab", "Min"].map((day) => (
             <div key={day} className="py-4 text-center text-xs font-bold uppercase tracking-widest text-gray-500">
               {day}
             </div>
@@ -114,7 +114,7 @@ export default function CalendarMonitoring() {
                   </span>
                   {!isWorkDay && (
                     <span className="text-[8px] bg-red-500/10 text-red-500 px-1.5 py-0.5 rounded-full font-bold uppercase tracking-tighter">
-                      Holiday
+                      Libur
                     </span>
                   )}
                 </div>
@@ -127,7 +127,7 @@ export default function CalendarMonitoring() {
                   ))}
                   {dayRecords.length > 3 && (
                     <div className="text-[9px] text-center text-gray-400 font-medium">
-                      + {dayRecords.length - 3} more
+                      + {dayRecords.length - 3} lainnya
                     </div>
                   )}
                 </div>
@@ -141,15 +141,15 @@ export default function CalendarMonitoring() {
       <div className="flex items-center gap-6 justify-center text-xs font-medium text-gray-500">
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-accent rounded-full" />
-          <span>Present</span>
+          <span>Hadir</span>
         </div>
         <div className="flex items-center gap-2">
           <div className="w-3 h-3 bg-red-500/10 border border-red-500/20 rounded-md" />
-          <span>Holiday / Off</span>
+          <span>Libur / Cuti</span>
         </div>
         <div className="flex items-center gap-2">
           <Info className="w-4 h-4" />
-          <span>Click day for details (To be implemented)</span>
+          <span>Klik hari untuk detail (Akan diimplementasikan)</span>
         </div>
       </div>
     </div>

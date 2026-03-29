@@ -60,8 +60,8 @@ export default function AdminSettings() {
   return (
     <div className="space-y-8">
       <header>
-        <h2 className="text-3xl font-bold tracking-tight">System Settings</h2>
-        <p className="text-gray-500">Configure business rules, holidays, and system limits.</p>
+        <h2 className="text-3xl font-bold tracking-tight">Pengaturan Sistem</h2>
+        <p className="text-gray-500">Konfigurasikan aturan bisnis, hari libur, dan batas sistem.</p>
       </header>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
@@ -70,7 +70,7 @@ export default function AdminSettings() {
           <div className="glass p-8 rounded-3xl border border-border">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <Coffee className="w-5 h-5 text-accent" />
-              Monthly Schedule: {format(currentMonth, "MMMM yyyy")}
+              Jadwal Bulanan: {format(currentMonth, "MMMM yyyy")}
             </h3>
             <div className="grid grid-cols-2 sm:grid-cols-4 md:grid-cols-7 gap-3">
               {days.map((day) => {
@@ -106,34 +106,34 @@ export default function AdminSettings() {
           <div className="glass p-8 rounded-3xl border border-border">
             <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
               <MapPin className="w-5 h-5 text-accent" />
-              Geofencing Limits
+              Batas Geofencing
             </h3>
             <div className="space-y-4">
               <div className="p-4 bg-background/50 border border-border rounded-2xl">
-                <p className="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Target Radius</p>
+                <p className="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Radius Target</p>
                 <div className="flex items-end gap-2">
                   <span className="text-2xl font-black">50</span>
-                  <span className="text-sm text-gray-500 mb-1 font-medium italic">meters (fixed)</span>
+                  <span className="text-sm text-gray-500 mb-1 font-medium italic">meter (tetap)</span>
                 </div>
               </div>
               <div className="p-4 bg-background/50 border border-border rounded-2xl opacity-50">
-                <p className="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Coordinates</p>
+                <p className="text-xs text-gray-500 mb-1 font-bold uppercase tracking-wider">Koordinat</p>
                 <p className="text-xs font-mono truncate">Lat: {coordinates.lat}</p>
                 <p className="text-xs font-mono truncate">Long: {coordinates.lng}</p>
               </div>
             </div>
             <p className="mt-6 text-[10px] text-gray-400 italic">
-              Coordinates are currently controlled via Environment Variables for maximum security.
+             Koordinat saat ini dikontrol melalui Variabel Lingkungan untuk keamanan maksimum.
             </p>
           </div>
 
           <div className="glass p-8 rounded-3xl border border-border">
              <div className="flex items-center gap-3 text-sm font-bold text-accent mb-2">
                 <div className="w-2 h-2 bg-accent rounded-full animate-ping" />
-                System Health
+                Kesehatan Sistem
              </div>
              <p className="text-xs text-gray-500 leading-relaxed">
-               All core systems are operational. Backup sync running every 24 hours to Supabase.
+               Semua sistem inti beroperasi. Sinkronisasi cadangan berjalan setiap 24 jam ke Supabase.
              </p>
           </div>
         </div>

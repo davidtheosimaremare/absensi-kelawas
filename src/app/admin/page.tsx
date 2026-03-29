@@ -38,24 +38,24 @@ export default function AdminDashboard() {
       <div className="flex items-center justify-center h-[60vh]">
         <div className="p-4 glass rounded-2xl animate-pulse flex items-center gap-3">
           <div className="w-4 h-4 bg-accent rounded-full animate-bounce" />
-          <span className="text-sm font-medium">Crunching data...</span>
+          <span className="text-sm font-medium">Memproses data...</span>
         </div>
       </div>
     );
   }
 
   const stats = [
-    { label: "Total Employees", value: data?.metrics.totalEmployees, icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
-    { label: "Present Today", value: data?.metrics.presentToday, icon: UserCheck, color: "text-green-500", bg: "bg-green-500/10" },
-    { label: "Attendance Rate", value: `${Math.round(data?.metrics.attendanceRate || 0)}%`, icon: TrendingUp, color: "text-purple-500", bg: "bg-purple-500/10" },
-    { label: "Active Schedules", value: "Standard", icon: CalendarIcon, color: "text-orange-500", bg: "bg-orange-500/10" },
+    { label: "Total Karyawan", value: data?.metrics.totalEmployees, icon: Users, color: "text-blue-500", bg: "bg-blue-500/10" },
+    { label: "Hadir Hari Ini", value: data?.metrics.presentToday, icon: UserCheck, color: "text-green-500", bg: "bg-green-500/10" },
+    { label: "Tingkat Kehadiran", value: `${Math.round(data?.metrics.attendanceRate || 0)}%`, icon: TrendingUp, color: "text-purple-500", bg: "bg-purple-500/10" },
+    { label: "Jadwal Aktif", value: "Standar", icon: CalendarIcon, color: "text-orange-500", bg: "bg-orange-500/10" },
   ];
 
   return (
     <div className="space-y-8">
       <header>
-        <h2 className="text-3xl font-bold tracking-tight">System Overview</h2>
-        <p className="text-gray-500">Welcome back, Administrator. Here's what's happening today.</p>
+        <h2 className="text-3xl font-bold tracking-tight">Ikhtisar Sistem</h2>
+        <p className="text-gray-500">Selamat datang kembali, Administrator. Berikut adalah aktivitas hari ini.</p>
       </header>
 
       {/* Stats Grid */}
@@ -79,7 +79,7 @@ export default function AdminDashboard() {
         <div className="glass p-6 rounded-3xl border border-border">
           <h3 className="text-lg font-bold mb-6 flex items-center gap-2">
             <Activity className="w-5 h-5 text-accent" />
-            Recent Attendances
+            Kehadiran Terbaru
           </h3>
           <div className="space-y-4">
             {data?.records.slice(0, 5).map((record) => (
@@ -95,13 +95,13 @@ export default function AdminDashboard() {
                 </div>
                 <div className="text-right text-xs">
                   <span className="px-2 py-1 bg-green-500/10 text-green-500 rounded-full font-medium">
-                    Checked In
+                    Masuk
                   </span>
                 </div>
               </div>
             ))}
             {data?.records.length === 0 && (
-              <p className="text-center py-8 text-gray-500 text-sm italic">No attendance records yet today.</p>
+              <p className="text-center py-8 text-gray-500 text-sm italic">Belum ada catatan kehadiran hari ini.</p>
             )}
           </div>
         </div>
@@ -112,13 +112,13 @@ export default function AdminDashboard() {
             <TrendingUp className="w-10 h-10 text-accent/20" />
           </div>
           <div>
-            <h4 className="font-bold">Growth & Analytics</h4>
+            <h4 className="font-bold">Pertumbuhan & Analitik</h4>
             <p className="text-sm text-gray-500 max-w-[200px] mx-auto">
-              Visual analytics and growth charts will appear here as more data is collected.
+              Analitik visual dan grafik pertumbuhan akan muncul di sini saat lebih banyak data terkumpul.
             </p>
           </div>
           <button className="px-6 py-2 bg-accent text-accent-foreground rounded-full text-sm font-medium hover:scale-105 transition-transform">
-            View Detailed Reports
+            Lihat Laporan Detail
           </button>
         </div>
       </div>

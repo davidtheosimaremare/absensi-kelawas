@@ -15,11 +15,11 @@ import { signOut } from "next-auth/react";
 import { clsx } from "clsx";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Dashboard", href: "/admin" },
-  { icon: Users, label: "Employees", href: "/admin/employees" },
-  { icon: Calendar, label: "Monitoring", href: "/admin/monitoring" },
-  { icon: BarChart3, label: "Reports", href: "/admin/reports" },
-  { icon: Settings, label: "Settings", href: "/admin/settings" },
+  { icon: LayoutDashboard, label: "Dasbor", href: "/admin" },
+  { icon: Users, label: "Karyawan", href: "/admin/employees" },
+  { icon: Calendar, label: "Pemantauan", href: "/admin/monitoring" },
+  { icon: BarChart3, label: "Laporan", href: "/admin/reports" },
+  { icon: Settings, label: "Pengaturan", href: "/admin/settings" },
 ];
 
 export default function Sidebar() {
@@ -33,7 +33,7 @@ export default function Sidebar() {
         </div>
         <div>
           <h1 className="font-bold text-lg leading-tight">Smart-Check</h1>
-          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Admin Panel</p>
+          <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold">Panel Admin</p>
         </div>
       </div>
 
@@ -61,7 +61,7 @@ export default function Sidebar() {
           className="w-full flex items-center gap-3 px-4 py-3 text-red-500 hover:bg-red-50 dark:hover:bg-red-950/20 rounded-xl transition-colors text-sm font-medium group"
         >
           <LogOut className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-          Logout
+          Keluar
         </button>
       </div>
     </aside>
