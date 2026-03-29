@@ -79,25 +79,47 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
     };
 
     useEffect(() => {
+        let scanInterval: NodeJS.Timeout;
+        let attempts = 0;
+
+        const attemptScan = async () => {
+            if (!videoRef.current || videoRef.current.readyState !== 4) return;
+
+            try {
+                const detection = await faceapi.detectSingleFace(videoRef.current)
+                    .withFaceLandmarks()
+                    .withFaceDescriptor();
+
+                if (detection) {
+                    clearInterval(scanInterval);
+                    processDetection(detection);
+                } else {
+                    attempts++;
+                    if (attempts >= 20) {
+                        clearInterval(scanInterval);
+                        setErrorMessage("Wajah tidak terlihat jelas. Tolong pastikan cahaya cukup dan wajah berada di tengah bingkai!");
+                        setStatus("error");
+                    }
+                }
+            } catch (err) {
+                clearInterval(scanInterval);
+                setErrorMessage("Terjadi kesalahan saat memproses algoritma wajah.");
+                setStatus("error");
+            }
+        };
+
         if (status === "scanning") {
-            scanFace();
+            scanInterval = setInterval(attemptScan, 500);
+            attemptScan(); // try immediately once
         }
+
+        return () => {
+            if (scanInterval) clearInterval(scanInterval);
+        };
     }, [status]);
 
-    const scanFace = async () => {
-        if (!videoRef.current) return;
-
+    const processDetection = async (detection: faceapi.WithFaceDescriptor<faceapi.WithFaceLandmarks<{ detection: faceapi.FaceDetection; }, faceapi.FaceLandmarks68>>) => {
         try {
-            const detection = await faceapi.detectSingleFace(videoRef.current)
-                .withFaceLandmarks()
-                .withFaceDescriptor();
-
-            if (!detection) {
-                setErrorMessage("Wajah tidak terlihat jelas. Tolong pastikan cahaya cukup dan wajah berada di tengah bingkai!");
-                setStatus("error");
-                return;
-            }
-
             if (faceData) {
                 // Mode Verifikasi (Wajah sudah terdaftar)
                 const savedDescriptor = new Float32Array(JSON.parse(faceData));
