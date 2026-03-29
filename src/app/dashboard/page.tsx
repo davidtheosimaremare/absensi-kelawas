@@ -166,7 +166,7 @@ export default function EmployeeDashboard() {
                    <div>
                       <p className="text-xs font-bold uppercase tracking-wider">Status Lokasi</p>
                       <p className="text-xs text-gray-500">
-                        {locLoading ? "Mencari lokasi..." : (location ? "Dalam Jangkauan" : locError)}
+                        {locLoading ? "Mencari lokasi..." : (location ? "Lokasi Ditemukan (Mengecek radius saat absen)" : locError)}
                       </p>
                    </div>
                 </div>

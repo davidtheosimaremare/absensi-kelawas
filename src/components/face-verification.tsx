@@ -83,10 +83,15 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
         let attempts = 0;
 
         const attemptScan = async () => {
-            if (!videoRef.current || videoRef.current.readyState !== 4) return;
+            if (
+                !videoRef.current || 
+                videoRef.current.readyState < 2 || 
+                videoRef.current.videoWidth === 0
+            ) return;
 
             try {
-                const detection = await faceapi.detectSingleFace(videoRef.current)
+                const options = new faceapi.SsdMobilenetv1Options({ minConfidence: 0.4 });
+                const detection = await faceapi.detectSingleFace(videoRef.current, options)
                     .withFaceLandmarks()
                     .withFaceDescriptor();
 
