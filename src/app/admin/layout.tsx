@@ -8,8 +8,9 @@ export default function AdminLayout({
   return (
     <div className="min-h-screen bg-background flex">
       <Sidebar />
-      <main className="flex-1 ml-64 p-8 relative overflow-x-hidden">
-        {/* Background blobs for premium feel */}
+      {/* Desktop: offset left for sidebar. Mobile: top padding for topbar, bottom padding for bottom nav */}
+      <main className="flex-1 md:ml-64 pt-16 md:pt-0 pb-20 md:pb-0 p-4 md:p-8 relative overflow-x-hidden">
+        {/* Background blobs */}
         <div className="fixed top-[-10%] right-[-10%] w-[30%] h-[30%] bg-accent/5 rounded-full blur-[100px] -z-10" />
         <div className="fixed bottom-[-10%] left-[20%] w-[30%] h-[30%] bg-accent/5 rounded-full blur-[100px] -z-10" />
         

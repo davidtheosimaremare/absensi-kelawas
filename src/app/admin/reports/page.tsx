@@ -154,6 +154,7 @@ export default function AdminReports() {
       {/* --- TAB: TABLE --- */}
       {activeTab === "table" && (
         <div className="glass rounded-3xl border border-border overflow-hidden">
+          <div className="overflow-x-auto">
           <table className="w-full text-left">
             <thead>
               <tr className="bg-accent/5 border-b border-border">
@@ -241,6 +242,7 @@ export default function AdminReports() {
               <p className="text-sm italic">Tidak ada catatan.</p>
             </div>
           )}
+          </div>{/* end overflow-x-auto */}
         </div>
       )}
 
