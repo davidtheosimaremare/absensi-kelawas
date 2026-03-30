@@ -1,14 +1,12 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { UserPlus, Search, MoreVertical, Trash2, Mail, CreditCard, ShieldCheck, Loader2 } from "lucide-react";
+import { UserPlus, Search, Trash2, Mail, Loader2 } from "lucide-react";
 
 interface Employee {
   id: string;
   name: string;
   email: string;
-  ktp: string | null;
-  faceData: string | null;
 }
 
 export default function EmployeeManagement() {
@@ -16,7 +14,7 @@ export default function EmployeeManagement() {
   const [loading, setLoading] = useState(true);
   const [search, setSearch] = useState("");
   const [showAddModal, setShowAddModal] = useState(false);
-  const [newEmployee, setNewEmployee] = useState({ name: "", email: "", password: "", ktp: "" });
+  const [newEmployee, setNewEmployee] = useState({ name: "", email: "", password: "" });
   const [addingEmployee, setAddingEmployee] = useState(false);
 
   useEffect(() => {
@@ -39,7 +37,7 @@ export default function EmployeeManagement() {
     });
     if (res.ok) {
       setShowAddModal(false);
-      setNewEmployee({ name: "", email: "", password: "", ktp: "" });
+      setNewEmployee({ name: "", email: "", password: "" });
       fetchEmployees();
     }
     setAddingEmployee(false);
@@ -108,25 +106,15 @@ export default function EmployeeManagement() {
                 </button>
               </div>
               
-              <div className="space-y-3">
+                <div className="space-y-3">
                 <h3 className="font-bold text-lg">{employee.name}</h3>
-                <div className="space-y-1.5 underline-offset-4">
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <Mail className="w-4 h-4" />
-                    {employee.email}
-                  </div>
-                  <div className="flex items-center gap-2 text-xs text-gray-500">
-                    <CreditCard className="w-4 h-4" />
-                    KTP: {employee.ktp || "Belum Diatur"}
-                  </div>
+                <div className="flex items-center gap-2 text-xs text-gray-500">
+                  <Mail className="w-4 h-4" />
+                  {employee.email}
                 </div>
               </div>
 
-              <div className="mt-6 pt-4 border-t border-border flex items-center justify-between">
-                <span className={`flex items-center gap-1.5 text-[10px] font-bold uppercase tracking-wider ${employee.faceData ? 'text-green-500' : 'text-orange-500'}`}>
-                  <ShieldCheck className="w-3.5 h-3.5" />
-                  {employee.faceData ? 'Wajah Terdaftar' : 'Wajah Tertunda'}
-                </span>
+              <div className="mt-6 pt-4 border-t border-border flex items-center justify-end">
                 <span className="text-[10px] bg-accent/10 text-accent px-2 py-1 rounded-full font-bold">
                   KARYAWAN
                 </span>
@@ -166,13 +154,7 @@ export default function EmployeeManagement() {
                 value={newEmployee.password}
                 onChange={(e) => setNewEmployee({ ...newEmployee, password: e.target.value })}
               />
-              <input 
-                type="text" 
-                placeholder="Nomor KTP (Opsional)" 
-                className="w-full px-4 py-3 bg-input border border-border rounded-xl focus:ring-2 focus:ring-accent outline-hidden transition-all text-sm"
-                value={newEmployee.ktp}
-                onChange={(e) => setNewEmployee({ ...newEmployee, ktp: e.target.value })}
-              />
+
               <div className="flex gap-3 pt-4">
                 <button 
                   type="button"
