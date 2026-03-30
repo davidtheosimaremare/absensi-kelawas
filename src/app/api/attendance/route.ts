@@ -20,15 +20,18 @@ export async function POST(req: Request) {
     }
 
     // 1. Geofencing check
-    const targetLat = parseFloat(process.env.TARGET_LATITUDE || "0");
-    const targetLong = parseFloat(process.env.TARGET_LONGITUDE || "0");
-    const distance = calculateDistance(latitude, longitude, targetLat, targetLong);
+    const disableGeo = process.env.DISABLE_GEOFENCING === "true";
+    if (!disableGeo) {
+      const targetLat = parseFloat(process.env.TARGET_LATITUDE || "0");
+      const targetLong = parseFloat(process.env.TARGET_LONGITUDE || "0");
+      const distance = calculateDistance(latitude, longitude, targetLat, targetLong);
 
-    if (distance > 50) {
-      return NextResponse.json(
-        { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter. Pastikan kamu berada di dekat Resto KELAWAS untuk dapat melakukan absensi.` },
-        { status: 403 }
-      );
+      if (distance > 50) {
+        return NextResponse.json(
+          { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter. Pastikan kamu berada di dekat Resto KELAWAS untuk dapat melakukan absensi.` },
+          { status: 403 }
+        );
+      }
     }
 
     // 2. Schedule check
