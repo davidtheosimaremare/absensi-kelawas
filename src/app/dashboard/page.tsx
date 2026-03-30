@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
+import { useSession, signOut } from "next-auth/react";
 import { MapPin, ShieldCheck, Clock, CheckCircle2, XCircle, Loader2, Camera, LogOut } from "lucide-react";
 import { format } from "date-fns";
 import dynamic from 'next/dynamic';
@@ -115,9 +115,18 @@ export default function EmployeeDashboard() {
                 <p className="text-xs text-gray-500 font-medium">Portal Karyawan</p>
               </div>
             </div>
-            <div className="text-right">
-              <p className="text-sm font-bold">{session?.user?.name}</p>
-              <p className="text-[10px] text-gray-500 uppercase tracking-wider">Hadir & Aman</p>
+            <div className="flex items-center gap-3">
+              <div className="text-right">
+                <p className="text-sm font-bold">{session?.user?.name}</p>
+                <p className="text-[10px] text-gray-500 uppercase tracking-wider">Hadir & Aman</p>
+              </div>
+              <button
+                onClick={() => signOut({ callbackUrl: "/login" })}
+                title="Logout"
+                className="w-9 h-9 flex items-center justify-center rounded-xl bg-red-500/10 text-red-500 hover:bg-red-500 hover:text-white transition-all"
+              >
+                <LogOut className="w-4 h-4" />
+              </button>
             </div>
         </div>
 
