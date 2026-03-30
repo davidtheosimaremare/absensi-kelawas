@@ -13,65 +13,90 @@ export async function POST(req: Request) {
   }
 
   try {
-    const { latitude, longitude, type, photoData, faceDescriptor } = await req.json(); // type: 'check_in' | 'check_out'
+    const { latitude, longitude, type, photoData, faceDescriptor } = await req.json();
 
     if (!latitude || !longitude || !type) {
-      return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
+      return NextResponse.json({ error: "Data tidak lengkap" }, { status: 400 });
     }
 
-    // 1. Geofencing check — read from DB, fallback to env
-    const [geoDisabledRow, targetLatRow, targetLongRow, radiusRow] = await Promise.all([
-      prisma.systemSetting.findUnique({ where: { key: "DISABLE_GEOFENCING" } }),
-      prisma.systemSetting.findUnique({ where: { key: "TARGET_LATITUDE" } }),
-      prisma.systemSetting.findUnique({ where: { key: "TARGET_LONGITUDE" } }),
-      prisma.systemSetting.findUnique({ where: { key: "GEO_RADIUS" } }),
-    ]);
+    // 1. Geofencing check — safely try reading from DB, fallback to env
+    try {
+      const [geoDisabledRow, targetLatRow, targetLongRow, radiusRow] = await Promise.all([
+        prisma.systemSetting.findUnique({ where: { key: "DISABLE_GEOFENCING" } }),
+        prisma.systemSetting.findUnique({ where: { key: "TARGET_LATITUDE" } }),
+        prisma.systemSetting.findUnique({ where: { key: "TARGET_LONGITUDE" } }),
+        prisma.systemSetting.findUnique({ where: { key: "GEO_RADIUS" } }),
+      ]);
 
-    const disableGeo =
-      (geoDisabledRow?.value ?? process.env.DISABLE_GEOFENCING ?? "false") === "true";
+      const disableGeo =
+        (geoDisabledRow?.value ?? process.env.DISABLE_GEOFENCING ?? "false") === "true";
 
-    if (!disableGeo) {
-      const targetLat = parseFloat(targetLatRow?.value ?? process.env.TARGET_LATITUDE ?? "0");
-      const targetLong = parseFloat(targetLongRow?.value ?? process.env.TARGET_LONGITUDE ?? "0");
-      const radius = parseFloat(radiusRow?.value ?? "50");
-      const distance = calculateDistance(latitude, longitude, targetLat, targetLong);
+      if (!disableGeo) {
+        const targetLat = parseFloat(targetLatRow?.value ?? process.env.TARGET_LATITUDE ?? "0");
+        const targetLong = parseFloat(targetLongRow?.value ?? process.env.TARGET_LONGITUDE ?? "0");
+        const radius = parseFloat(radiusRow?.value ?? "50");
+        const distance = calculateDistance(latitude, longitude, targetLat, targetLong);
 
-      if (distance > radius) {
-        return NextResponse.json(
-          { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter. Pastikan kamu berada di dekat Resto KELAWAS untuk dapat melakukan absensi.` },
-          { status: 403 }
-        );
+        if (distance > radius) {
+          return NextResponse.json(
+            { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter. Pastikan kamu berada di dekat Resto KELAWAS untuk dapat melakukan absensi.` },
+            { status: 403 }
+          );
+        }
+      }
+    } catch (geoErr) {
+      // If DB setting fails, fallback to env var check
+      console.warn("Geofencing DB read failed, falling back to env:", geoErr);
+      const disableGeo = process.env.DISABLE_GEOFENCING === "true";
+      if (!disableGeo) {
+        const targetLat = parseFloat(process.env.TARGET_LATITUDE ?? "0");
+        const targetLong = parseFloat(process.env.TARGET_LONGITUDE ?? "0");
+        const distance = calculateDistance(latitude, longitude, targetLat, targetLong);
+        if (distance > 50) {
+          return NextResponse.json(
+            { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter.` },
+            { status: 403 }
+          );
+        }
       }
     }
 
-    // 2. Schedule check
+    // 2. Schedule check — use date string to avoid timezone issues
     const today = new Date();
-    const schedule = await prisma.schedule.findUnique({
-      where: { date: today },
+    const dateStr = format(today, "yyyy-MM-dd");
+    const dayStart = new Date(dateStr + "T00:00:00.000Z");
+    const dayEnd = new Date(dateStr + "T23:59:59.999Z");
+
+    const schedule = await prisma.schedule.findFirst({
+      where: {
+        date: {
+          gte: dayStart,
+          lte: dayEnd,
+        },
+      },
     });
 
     if (schedule?.status === "HOLIDAY") {
-      return NextResponse.json({ error: "Today is a holiday" }, { status: 403 });
+      return NextResponse.json({ error: "Hari ini adalah hari libur, absensi tidak dapat dilakukan." }, { status: 403 });
     }
 
     // 3. Attendance logic
     const userId = (session.user as any).id;
-    const dateStr = format(today, "yyyy-MM-dd");
 
     // Check if attendance already exists for today
     let attendance = await prisma.attendance.findFirst({
       where: {
         userId,
         checkIn: {
-          gte: new Date(dateStr),
-          lt: new Date(new Date(dateStr).getTime() + 24 * 60 * 60 * 1000),
+          gte: new Date(dateStr + "T00:00:00.000Z"),
+          lt: new Date(dateStr + "T23:59:59.999Z"),
         },
       },
     });
 
     if (type === "check_in") {
       if (attendance) {
-        return NextResponse.json({ error: "Already checked in today" }, { status: 400 });
+        return NextResponse.json({ error: "Anda sudah absen masuk hari ini." }, { status: 400 });
       }
 
       attendance = await prisma.attendance.create({
@@ -86,10 +111,10 @@ export async function POST(req: Request) {
       });
     } else if (type === "check_out") {
       if (!attendance) {
-        return NextResponse.json({ error: "No check-in found for today" }, { status: 400 });
+        return NextResponse.json({ error: "Anda belum absen masuk hari ini." }, { status: 400 });
       }
       if (attendance.checkOut) {
-        return NextResponse.json({ error: "Already checked out today" }, { status: 400 });
+        return NextResponse.json({ error: "Anda sudah absen pulang hari ini." }, { status: 400 });
       }
 
       attendance = await prisma.attendance.update({
@@ -101,7 +126,7 @@ export async function POST(req: Request) {
       });
     }
 
-    // Save initial face biometric data whether they registered it during check-in or check-out
+    // Save face biometric data if provided (first time registration)
     if (faceDescriptor) {
       await prisma.user.update({
         where: { id: userId },
@@ -110,8 +135,11 @@ export async function POST(req: Request) {
     }
 
     return NextResponse.json(attendance);
-  } catch (error) {
-    console.error(error);
-    return NextResponse.json({ error: "Failed to submit attendance" }, { status: 500 });
+  } catch (error: any) {
+    console.error("Attendance error:", error?.message ?? error);
+    return NextResponse.json(
+      { error: `Gagal menyimpan absensi: ${error?.message ?? "unknown error"}` },
+      { status: 500 }
+    );
   }
 }
