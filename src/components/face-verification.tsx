@@ -95,7 +95,7 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
                 <div className="text-center">
                     <h3 className="text-3xl font-black mb-1">Foto Absensi</h3>
                     <p className="text-gray-500 font-medium text-sm">
-                        Ambil foto selfie sebagai bukti kehadiran Anda
+                        Mundur sedikit agar wajah dan bahu terlihat jelas, lalu tekan tombol ambil foto
                     </p>
                 </div>
 
@@ -132,12 +132,18 @@ export default function FaceVerification({ faceData, onVerify, onCancel }: FaceV
                     {/* Ready Overlay */}
                     {status === "ready" && (
                         <div className="absolute inset-0 pointer-events-none">
-                            {/* Face guide circle */}
+                            {/* Face guide oval */}
                             <div className="absolute inset-0 flex items-center justify-center">
-                                <div className="w-36 h-36 md:w-44 md:h-44 rounded-full border-2 border-white/50 border-dashed" />
+                                <div className="w-32 h-40 md:w-36 md:h-44 rounded-full border-2 border-white/60 border-dashed" />
                             </div>
-                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/60 to-transparent p-3">
-                                <p className="text-white text-xs text-center font-medium">Posisikan wajah di tengah lalu tekan tombol</p>
+                            <div className="absolute top-2 left-0 right-0">
+                                <p className="text-white/80 text-[10px] text-center font-medium">Wajah + bahu harus terlihat</p>
+                            </div>
+                            <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent p-3">
+                                <p className="text-white text-xs text-center font-bold leading-snug">
+                                    📱 Mundur ±50cm dari kamera<br />
+                                    <span className="font-normal opacity-80">Posisikan wajah dalam garis oval</span>
+                                </p>
                             </div>
                         </div>
                     )}

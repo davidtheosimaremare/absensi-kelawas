@@ -26,7 +26,7 @@ export async function POST(req: Request) {
 
     if (distance > 50) {
       return NextResponse.json(
-        { error: `Too far from office! Current distance: ${Math.round(distance)}m` },
+        { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter. Pastikan kamu berada di dekat Resto KELAWAS untuk dapat melakukan absensi.` },
         { status: 403 }
       );
     }
