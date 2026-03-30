@@ -19,14 +19,24 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Missing required fields" }, { status: 400 });
     }
 
-    // 1. Geofencing check
-    const disableGeo = process.env.DISABLE_GEOFENCING === "true";
+    // 1. Geofencing check — read from DB, fallback to env
+    const [geoDisabledRow, targetLatRow, targetLongRow, radiusRow] = await Promise.all([
+      prisma.systemSetting.findUnique({ where: { key: "DISABLE_GEOFENCING" } }),
+      prisma.systemSetting.findUnique({ where: { key: "TARGET_LATITUDE" } }),
+      prisma.systemSetting.findUnique({ where: { key: "TARGET_LONGITUDE" } }),
+      prisma.systemSetting.findUnique({ where: { key: "GEO_RADIUS" } }),
+    ]);
+
+    const disableGeo =
+      (geoDisabledRow?.value ?? process.env.DISABLE_GEOFENCING ?? "false") === "true";
+
     if (!disableGeo) {
-      const targetLat = parseFloat(process.env.TARGET_LATITUDE || "0");
-      const targetLong = parseFloat(process.env.TARGET_LONGITUDE || "0");
+      const targetLat = parseFloat(targetLatRow?.value ?? process.env.TARGET_LATITUDE ?? "0");
+      const targetLong = parseFloat(targetLongRow?.value ?? process.env.TARGET_LONGITUDE ?? "0");
+      const radius = parseFloat(radiusRow?.value ?? "50");
       const distance = calculateDistance(latitude, longitude, targetLat, targetLong);
 
-      if (distance > 50) {
+      if (distance > radius) {
         return NextResponse.json(
           { error: `Lokasi Anda terlalu jauh dari Resto KELAWAS! Jarak saat ini: ${Math.round(distance)} meter. Pastikan kamu berada di dekat Resto KELAWAS untuk dapat melakukan absensi.` },
           { status: 403 }

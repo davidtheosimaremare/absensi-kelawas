@@ -57,3 +57,10 @@ model Attendance {
 
   @@map("attendances")
 }
+
+model SystemSetting {
+  key   String @id
+  value String
+
+  @@map("system_settings")
+}
