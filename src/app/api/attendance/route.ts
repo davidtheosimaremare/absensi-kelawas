@@ -81,7 +81,16 @@ export async function POST(req: Request) {
     }
 
     // 3. Attendance logic
-    const userId = (session.user as any).id;
+    // Look up user by email to get correct DB id (avoid stale JWT token ID mismatch)
+    const userRecord = await prisma.user.findUnique({
+      where: { email: session.user.email! },
+    });
+
+    if (!userRecord) {
+      return NextResponse.json({ error: "Akun Anda tidak ditemukan. Silakan logout dan login kembali." }, { status: 404 });
+    }
+
+    const userId = userRecord.id;
 
     // Check if attendance already exists for today
     let attendance = await prisma.attendance.findFirst({
