@@ -23,7 +23,7 @@ export default function LoginPage() {
           <LoginForm />
 
           <div className="mt-8 pt-6 border-t border-border flex justify-between items-center text-xs text-gray-500">
-            <span>Didukung oleh Vibe Coder</span>
+            <span>Made by Modibi</span>
             <span className="flex items-center gap-1">
               <span className="w-1.5 h-1.5 bg-green-500 rounded-full animate-pulse" />
               Sistem Aman
